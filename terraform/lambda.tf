@@ -59,3 +59,8 @@ resource "aws_lambda_function" "yearbook" {
     Project = "devops-capstone"
   }
 }
+
+output "lambda_deployment_bucket" {
+  description = "S3 bucket used for Lambda deployment"
+  value       = aws_s3_bucket.lambda_deployment.bucket
+}
