@@ -8,6 +8,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      TF_TOKEN_app_terraform_io: ${{ secrets.HCP_TERRAFORM_TOKEN }}
 
 
     steps:
@@ -41,11 +43,8 @@ jobs:
           aws-region: eu-west-2
 
 
-
       - name: Terraform Init
         working-directory: terraform
-        env:
-          TF_TOKEN_app_terraform_io: ${{ secrets.HCP_TERRAFORM_TOKEN }}
         run: terraform init
 
 
