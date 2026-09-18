@@ -1,4 +1,4 @@
-- name: Configure DevOps Capstone Server
+- name: Configure and deploy DevOps Capstone
   hosts: webserver
   become: true
 
@@ -20,3 +20,30 @@
         name: docker
         state: started
         enabled: yes
+
+    - name: Create application directory
+      file:
+        path: /opt/devops-capstone
+        state: directory
+        mode: '0755'
+
+    - name: Copy Docker Compose file
+      copy:
+        src: ../docker-compose.yml
+        dest: /opt/devops-capstone/docker-compose.yml
+        mode: '0644'
+
+    - name: Copy portfolio application
+      synchronize:
+        src: ../portfolio/
+        dest: /opt/devops-capstone/portfolio/
+
+    - name: Copy Java application
+      synchronize:
+        src: ../java-app/
+        dest: /opt/devops-capstone/java-app/
+
+    - name: Build and start applications
+      command:
+        cmd: docker compose up -d --build
+        chdir: /opt/devops-capstone
