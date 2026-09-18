@@ -1,0 +1,8 @@
+java-app-temp/
+temp-java/
+java-app/target/
+*.pem
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl

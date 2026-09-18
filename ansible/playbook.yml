@@ -1,0 +1,22 @@
+- name: Configure DevOps Capstone Server
+  hosts: webserver
+  become: true
+
+  tasks:
+
+    - name: Update apt package cache
+      apt:
+        update_cache: yes
+
+    - name: Install Docker and Docker Compose
+      apt:
+        name:
+          - docker.io
+          - docker-compose-v2
+        state: present
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
