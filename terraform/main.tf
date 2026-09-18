@@ -5,6 +5,14 @@ terraform {
       version = "~> 6.0"
     }
   }
+
+  cloud {
+    organization = "babaseyi-terraform"
+
+    workspaces {
+      name = "devops-capstone"
+    }
+  }
 }
 
 provider "aws" {
