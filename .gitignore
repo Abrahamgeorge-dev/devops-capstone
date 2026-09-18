@@ -6,3 +6,6 @@ java-app/target/
 *.tfstate
 *.tfstate.*
 .terraform.lock.hcl
+
+lambda/target/
+ansible/inventory.ini
