@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        TF_TOKEN_app_terraform_io = credentials('hcp-terraform-token')
+    }
+
     stages {
 
         stage('Checkout Code') {
