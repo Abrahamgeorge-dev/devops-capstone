@@ -4,12 +4,12 @@
 
 This project implements a modern end-to-end DevOps pipeline that automates infrastructure provisioning and application deployment.
 
-The project uses **GitHub, Jenkins, Terraform, AWS, Ansible, Docker, Docker Compose, Maven, and Linux** to deploy two different applications on the same AWS EC2 server:
+The project uses **GitHub, Jenkins, Terraform, AWS, Ansible, Docker, Docker Compose, Maven, and Linux** to deploy two applications on the same AWS EC2 server:
 
 1. A personal Portfolio Web Application
-2. A Java Web Application
+2. A Java Yearbook Web Application
 
-The pipeline automates the process from source code checkout to application deployment.
+The pipeline automates the deployment process from source code checkout and application build to infrastructure provisioning and application deployment.
 
 ---
 
@@ -23,7 +23,7 @@ The objective of this project is to demonstrate how DevOps tools can work togeth
 * Configure the EC2 server using Ansible
 * Containerize applications using Docker
 * Run multiple applications using Docker Compose
-* Automate the deployment process using Jenkins
+* Automate deployment using Jenkins CI/CD
 
 ---
 
@@ -41,7 +41,7 @@ The objective of this project is to demonstrate how DevOps tools can work togeth
 | Docker Compose | Running multiple containers                     |
 | Maven          | Java application build                          |
 | Nginx          | Portfolio web server                            |
-| Apache Tomcat  | Java application server                         |
+| Java           | Java Yearbook application                       |
 | Linux/Ubuntu   | Server operating system                         |
 
 ---
@@ -63,7 +63,7 @@ The objective of this project is to demonstrate how DevOps tools can work togeth
               |                           v
               |                    AWS Infrastructure
               |                           |
-              |                         EC2
+              |                          EC2
               |                           |
               +-----------------------> Ansible
                                            |
@@ -75,13 +75,13 @@ The objective of this project is to demonstrate how DevOps tools can work togeth
                               +------------+------------+
                               |                         |
                               v                         v
-                       Portfolio App              Java App
+                       Portfolio App              Java Yearbook
                           Port 80                  Port 8081
 ```
 
 ---
 
-## AWS Infrastructure
+# AWS Infrastructure
 
 Terraform provisions the following AWS resources:
 
@@ -95,19 +95,19 @@ Terraform provisions the following AWS resources:
 
 The EC2 server is deployed in the AWS `eu-west-2` region.
 
-### Security Group
+## Security Group
 
-The EC2 security group allows:
+The EC2 security group allows the following inbound traffic:
 
-| Port | Purpose               |
-| ---- | --------------------- |
-| 22   | SSH                   |
-| 80   | Portfolio application |
-| 8081 | Java application      |
+| Port | Purpose                   |
+| ---- | ------------------------- |
+| 22   | SSH access                |
+| 80   | Portfolio application     |
+| 8081 | Java Yearbook application |
 
 ---
 
-## Project Structure
+# Project Structure
 
 ```text
 devops-capstone/
@@ -125,8 +125,10 @@ devops-capstone/
 ├── java-app/
 │   ├── Dockerfile
 │   ├── pom.xml
-│   ├── build.gradle
 │   └── src/
+│       └── main/
+│           └── java/
+│               └── Application.java
 │
 ├── terraform/
 │   ├── main.tf
@@ -143,6 +145,8 @@ devops-capstone/
 
 The Ansible inventory file is generated dynamically by Jenkins during deployment.
 
+Maven's generated `target/` directory is excluded from Git using `.gitignore`.
+
 ---
 
 # Portfolio Application
@@ -155,17 +159,41 @@ The portfolio application is a simple personal website built using:
 
 The application is containerized using Docker.
 
-### Portfolio Dockerfile
-
-The portfolio uses an Nginx Alpine image and exposes port 80.
+The portfolio Dockerfile uses the Nginx Alpine image and exposes port `80`.
 
 The application is deployed through Docker Compose.
 
+The portfolio is available at:
+
+```text
+http://<EC2-PUBLIC-IP>/
+```
+
 ---
 
-# Java Application
+# Java Yearbook Application
 
-The Java application is a Maven-based web application packaged as a WAR file.
+The Java application is the **Java Yearbook application** from the original project repository:
+
+```text
+https://github.com/ProfAkymbo/java-yearbook-project
+```
+
+The application is implemented as a standalone Java HTTP server using Java's built-in HTTP server functionality.
+
+The main application class is:
+
+```text
+java-app/src/main/java/Application.java
+```
+
+The application listens on port:
+
+```text
+8081
+```
+
+The application is built using Maven.
 
 Jenkins builds the application using:
 
@@ -173,15 +201,53 @@ Jenkins builds the application using:
 mvn -f java-app/pom.xml clean package -DskipTests
 ```
 
-The resulting WAR file is used to build the Java Docker image.
+Maven produces the Java JAR file:
 
-The Java application runs using Apache Tomcat inside a Docker container.
+```text
+java-app/target/java-yearbook-1.0.jar
+```
+
+The Docker image runs the JAR using Java.
+
+The Java Docker container exposes port `8081`.
+
+The Java Yearbook application is available at:
+
+```text
+http://<EC2-PUBLIC-IP>:8081/
+```
+
+---
+
+# Docker
+
+Both applications are containerized using Docker.
+
+## Portfolio Container
+
+The portfolio runs using Nginx:
+
+```text
+Container Port: 80
+Host Port: 80
+```
+
+## Java Container
+
+The Java Yearbook application runs using Java:
+
+```text
+Container Port: 8081
+Host Port: 8081
+```
 
 ---
 
 # Docker Compose
 
 Docker Compose is used to run both applications on the same EC2 server.
+
+The Compose configuration is:
 
 ```yaml
 services:
@@ -193,10 +259,10 @@ services:
   java-app:
     build: ./java-app
     ports:
-      - "8081:8080"
+      - "8081:8081"
 ```
 
-This allows both applications to run on the same server using different ports.
+This allows both applications to run simultaneously on the same server using different ports.
 
 ---
 
@@ -204,23 +270,25 @@ This allows both applications to run on the same server using different ports.
 
 Ansible is used to configure the EC2 server and deploy the applications.
 
-The Ansible playbook performs tasks including:
+The Ansible playbook performs the following tasks:
 
-1. Updating the package repository
-2. Installing Docker
-3. Installing Docker Compose
-4. Starting the Docker service
-5. Creating the application directory
-6. Copying the Docker Compose configuration
-7. Copying the portfolio application
-8. Copying the Java application
-9. Building and starting the applications
+1. Updates the package repository
+2. Installs Docker
+3. Installs Docker Compose
+4. Starts and enables the Docker service
+5. Creates the application directory
+6. Copies the Docker Compose configuration
+7. Copies the portfolio application
+8. Copies the Java application
+9. Builds and starts the applications using Docker Compose
 
 The deployment is executed using:
 
 ```bash
 ansible-playbook -i ansible/inventory.ini ansible/playbook.yml
 ```
+
+The inventory file is generated automatically by Jenkins using the EC2 public IP address.
 
 ---
 
@@ -234,33 +302,43 @@ The pipeline is defined in:
 Jenkinsfile
 ```
 
-The Jenkins pipeline performs the following stages:
+The Jenkins pipeline performs the following stages.
 
-### 1. Checkout Code
+## 1. Checkout Code
 
 Jenkins retrieves the latest source code from GitHub.
 
-### 2. Build Java Application
+## 2. Build Java Application
 
-Maven builds the Java application and creates the WAR package.
+Maven builds the Java Yearbook application:
 
-### 3. Terraform Init
+```bash
+mvn -f java-app/pom.xml clean package -DskipTests
+```
 
-Terraform initializes the project and connects to HCP Terraform.
+The application is packaged as a JAR file.
 
-### 4. Terraform Apply
+## 3. Terraform Init
+
+Terraform initializes the infrastructure configuration and connects to HCP Terraform.
+
+## 4. Terraform Apply
 
 Terraform provisions or verifies the AWS infrastructure.
 
-### 5. Get EC2 Public IP
+## 5. Get EC2 Public IP
 
-Jenkins retrieves the EC2 public IP address from Terraform.
+Jenkins retrieves the EC2 public IP address from Terraform:
 
-### 6. Create Ansible Inventory
+```bash
+terraform -chdir=terraform output -raw ec2_public_ip
+```
 
-Jenkins dynamically creates the Ansible inventory using the EC2 public IP.
+## 6. Create Ansible Inventory
 
-### 7. Deploy with Ansible
+Jenkins dynamically creates the Ansible inventory using the EC2 public IP address.
+
+## 7. Deploy with Ansible
 
 Ansible connects to the EC2 server and deploys both applications using Docker Compose.
 
@@ -281,39 +359,76 @@ GitHub
 Jenkins
     |
     +----> Maven
+    |         |
+    |         v
+    |    Java JAR
     |
     +----> Terraform
     |          |
     |          v
-    |        AWS
+    |         AWS
+    |          |
+    |         EC2
     |
     +----> Ansible
                |
                v
+          Docker Engine
+               |
           Docker Compose
              /      \
             /        \
            v          v
-      Portfolio     Java App
-        :80          :8081
+      Portfolio     Java Yearbook
+        :80           :8081
 ```
 
 ---
 
 # Application URLs
 
-After successful deployment, the applications are available at:
+After a successful deployment, the applications are available at:
 
-### Portfolio
+## Portfolio
 
 ```text
 http://<EC2-PUBLIC-IP>/
 ```
 
-### Java Application
+## Java Yearbook
 
 ```text
-http://<EC2-PUBLIC-IP>:8081/sampleapp/
+http://<EC2-PUBLIC-IP>:8081/
+```
+
+---
+
+# Local Testing
+
+The applications can also be tested locally using Docker Compose.
+
+Start both applications with:
+
+```bash
+docker compose up -d --build
+```
+
+Check the running containers:
+
+```bash
+docker compose ps
+```
+
+The portfolio can be accessed at:
+
+```text
+http://localhost
+```
+
+The Java Yearbook application can be accessed at:
+
+```text
+http://localhost:8081
 ```
 
 ---
@@ -326,7 +441,9 @@ A successful Jenkins deployment should complete with:
 Deployment completed successfully!
 ```
 
-The Ansible deployment should show:
+Ansible should complete without unreachable or failed hosts.
+
+Expected Ansible summary:
 
 ```text
 ok=9
@@ -334,17 +451,13 @@ unreachable=0
 failed=0
 ```
 
-Terraform should report:
-
-```text
-No changes. Your infrastructure matches the configuration.
-```
-
-The Java Maven build should report:
+The Maven build should report:
 
 ```text
 BUILD SUCCESS
 ```
+
+Terraform should report that the infrastructure matches the configuration when no infrastructure changes are required.
 
 ---
 
@@ -352,7 +465,7 @@ BUILD SUCCESS
 
 Sensitive information is not stored directly in the GitHub repository.
 
-The following should remain private:
+The following information should remain private:
 
 * AWS access keys
 * HCP Terraform API tokens
@@ -360,7 +473,9 @@ The following should remain private:
 * Passwords
 * Other authentication credentials
 
-Jenkins credentials are used to securely provide required secrets during the pipeline.
+Jenkins credentials are used to securely provide the required secrets during the pipeline.
+
+The `.gitignore` file prevents sensitive files and generated files from being committed.
 
 ---
 
@@ -384,16 +499,18 @@ This project demonstrates practical experience with:
 * Jenkins
 * CI/CD
 * SSH
-* Web application deployment
+* Containerized application deployment
 * Cloud infrastructure automation
 
 ---
 
 # Project Outcome
 
-The completed project provides an automated DevOps workflow capable of taking application code from GitHub, building the Java application, managing AWS infrastructure with Terraform, configuring the EC2 server with Ansible, and deploying two containerized applications using Docker Compose.
+The completed project provides an automated DevOps workflow capable of taking application code from GitHub, building the Java Yearbook application, provisioning AWS infrastructure with Terraform, configuring the EC2 server with Ansible, and deploying two containerized applications using Docker Compose.
 
-The final environment runs both the Portfolio Web Application and Java Web Application on the same AWS EC2 server.
+The final environment runs both the Portfolio Web Application and Java Yearbook application on the same AWS EC2 server.
+
+The Portfolio application is served on port `80`, while the Java Yearbook application is served on port `8081`.
 
 ---
 
