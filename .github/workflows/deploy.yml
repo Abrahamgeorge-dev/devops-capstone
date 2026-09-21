@@ -56,7 +56,7 @@ jobs:
       - name: Upload Lambda JAR to S3
         working-directory: terraform
         run: |
-          BUCKET_NAME=$(terraform state show aws_s3_bucket.lambda_deployment | grep '^bucket ' | awk '{print $3}' | tr -d '"')
+          BUCKET_NAME=$(terraform output -raw lambda_deployment_bucket)
           aws s3 cp ../lambda/target/yearbook-lambda-1.0.0.jar s3://$BUCKET_NAME/yearbook-lambda-1.0.0.jar
 
 
