@@ -77,7 +77,7 @@ pipeline {
         success {
             echo "Deployment completed successfully!"
             echo "Portfolio: http://${EC2_IP}/"
-            echo "Java App: http://${EC2_IP}:8081/sampleapp/"
+            echo "Java App: http://${EC2_IP}:8081/"
         }
 
         failure {
@@ -85,3 +85,4 @@ pipeline {
         }
     }
 }
+

@@ -1,5 +1,9 @@
-FROM tomcat:8.5.40
-COPY target/sampleapp.war /usr/local/tomcat/webapps
-EXPOSE 8080
-CMD /usr/local/tomcat/bin/catalina.sh run
-#
+FROM eclipse-temurin:21-jre
+
+WORKDIR /app
+
+COPY target/java-yearbook-1.0.jar app.jar
+
+EXPOSE 8081
+
+CMD ["java", "-jar", "app.jar"]
