@@ -70,8 +70,13 @@ jobs:
 
       - name: Configure SSH key
         run: |
-          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > /tmp/cohort8-key.pem
+          printf '%s\n' "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > /tmp/cohort8-key.pem
           chmod 600 /tmp/cohort8-key.pem
+
+      - name: Validate SSH key
+        run: |
+          ssh-keygen -y -f /tmp/cohort8-key.pem > /tmp/public-test.pub
+          echo "SSH private key format is valid"
 
       - name: Install Ansible
         run: |
