@@ -1,199 +1,355 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Babaseyi Abraham | Junior Cloud Engineer</title>
+<meta name="description" content="Portfolio of Babaseyi Abraham, Junior Cloud Engineer skilled in AWS, Linux, Terraform, Ansible, Jenkins, Docker and CI/CD.">
+<style>
+  :root {
+    --bg: #0b1020;
+    --bg2: #121a33;
+    --card: rgba(255,255,255,0.06);
+    --border: rgba(255,255,255,0.12);
+    --text: #eef2ff;
+    --muted: #a5b0d6;
+    --pink: #ff4d8d;
+    --orange: #ff9f45;
+    --yellow: #ffd93d;
+    --green: #2ee6a6;
+    --cyan: #28d7ff;
+    --blue: #5b8cff;
+    --purple: #a96bff;
+    --grad: linear-gradient(120deg, var(--pink), var(--orange), var(--yellow));
+    --grad2: linear-gradient(120deg, var(--cyan), var(--blue), var(--purple));
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
 
-    <title>Babaseyi Abraham | Junior Cloud Engineer</title>
+  /* Animated background blobs */
+  .blob {
+    position: fixed; border-radius: 50%; filter: blur(90px);
+    opacity: .35; z-index: 0; pointer-events: none;
+    animation: float 16s ease-in-out infinite;
+  }
+  .b1 { width: 420px; height: 420px; background: var(--pink); top: -120px; left: -100px; }
+  .b2 { width: 380px; height: 380px; background: var(--cyan); top: 30%; right: -120px; animation-delay: -5s; }
+  .b3 { width: 340px; height: 340px; background: var(--purple); bottom: -100px; left: 25%; animation-delay: -9s; }
+  @keyframes float {
+    0%,100% { transform: translate(0,0) scale(1); }
+    50% { transform: translate(40px,-50px) scale(1.12); }
+  }
 
-    <link rel="stylesheet" href="style.css">
+  main, header, footer { position: relative; z-index: 1; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  /* Nav */
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    backdrop-filter: blur(14px);
+    background: rgba(11,16,32,.7);
+    border-bottom: 1px solid var(--border);
+  }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: .5px; }
+  .logo span { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  nav ul { display: flex; gap: 22px; list-style: none; }
+  nav a { color: var(--muted); text-decoration: none; font-weight: 500; font-size: .95rem; transition: color .2s; }
+  nav a:hover { color: var(--yellow); }
+
+  /* Hero */
+  .hero { padding: 90px 0 70px; text-align: center; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 16px; border-radius: 999px;
+    background: var(--card); border: 1px solid var(--border);
+    font-size: .85rem; color: var(--muted); margin-bottom: 26px;
+  }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 0 var(--green); animation: pulse 2s infinite; }
+  @keyframes pulse { 70% { box-shadow: 0 0 0 10px rgba(46,230,166,0); } 100% { box-shadow: 0 0 0 0 rgba(46,230,166,0); } }
+  .hero h1 { font-size: clamp(2.4rem, 7vw, 4.6rem); line-height: 1.1; font-weight: 800; margin-bottom: 14px; }
+  .grad-text { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .grad-text2 { background: var(--grad2); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .typing { font-size: clamp(1.1rem, 3vw, 1.6rem); color: var(--cyan); min-height: 2.2em; font-family: "Courier New", monospace; }
+  .typing::after { content: "▌"; margin-left: 3px; animation: blink 1s steps(1) infinite; color: var(--pink); }
+  @keyframes blink { 50% { opacity: 0; } }
+  .hero p.lead { max-width: 640px; margin: 18px auto 34px; color: var(--muted); font-size: 1.08rem; }
+  .btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    padding: 13px 28px; border-radius: 12px; font-weight: 700; text-decoration: none;
+    transition: transform .2s, box-shadow .2s; display: inline-block;
+  }
+  .btn:hover { transform: translateY(-3px); }
+  .btn.primary { background: var(--grad); color: #1a1020; box-shadow: 0 10px 30px rgba(255,77,141,.35); }
+  .btn.ghost { border: 1.5px solid var(--border); color: var(--text); background: var(--card); }
+  .btn.ghost:hover { border-color: var(--cyan); box-shadow: 0 10px 30px rgba(40,215,255,.2); }
+
+  /* Sections */
+  section { padding: 70px 0; }
+  .eyebrow { text-transform: uppercase; letter-spacing: 3px; font-size: .8rem; color: var(--pink); font-weight: 700; }
+  h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 6px 0 36px; }
+
+  /* About */
+  .about-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 30px; align-items: stretch; }
+  .glass {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 28px; backdrop-filter: blur(10px);
+  }
+  .about-grid p { color: var(--muted); margin-bottom: 14px; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .stat { text-align: center; padding: 20px 10px; border-radius: 16px; background: rgba(255,255,255,.05); border: 1px solid var(--border); }
+  .stat b { display: block; font-size: 1.9rem; }
+  .stat:nth-child(1) b { color: var(--pink); }
+  .stat:nth-child(2) b { color: var(--green); }
+  .stat:nth-child(3) b { color: var(--cyan); }
+  .stat:nth-child(4) b { color: var(--yellow); }
+  .stat span { font-size: .82rem; color: var(--muted); }
+
+  /* Skills */
+  .skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; }
+  .skill {
+    text-align: center; padding: 24px 12px; border-radius: 18px;
+    background: var(--card); border: 1px solid var(--border);
+    transition: transform .25s, border-color .25s, box-shadow .25s;
+  }
+  .skill:hover { transform: translateY(-8px) rotate(-1deg); border-color: var(--c); box-shadow: 0 14px 34px color-mix(in srgb, var(--c) 35%, transparent); }
+  .skill .ico { font-size: 2.2rem; margin-bottom: 8px; filter: drop-shadow(0 4px 10px var(--c)); }
+  .skill h3 { font-size: 1rem; color: var(--c); }
+  .skill p { font-size: .8rem; color: var(--muted); }
+
+  /* Projects */
+  .projects { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 24px; }
+  .project {
+    border-radius: 22px; padding: 2px; background: var(--g);
+    transition: transform .3s;
+  }
+  .project:hover { transform: translateY(-8px); }
+  .project .inner { background: var(--bg2); border-radius: 20px; padding: 28px; height: 100%; display: flex; flex-direction: column; }
+  .project .tag { font-size: .75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; background: var(--g); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .project h3 { font-size: 1.35rem; margin: 8px 0 10px; }
+  .project p { color: var(--muted); font-size: .95rem; flex: 1; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .chip { padding: 4px 12px; border-radius: 999px; font-size: .78rem; background: rgba(255,255,255,.08); border: 1px solid var(--border); }
+
+  /* Pipeline visual */
+  .pipeline { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; margin-top: 10px; }
+  .step { padding: 10px 18px; border-radius: 12px; font-weight: 600; font-size: .9rem; color: #101426; }
+  .arrow { color: var(--muted); font-size: 1.2rem; }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 34px; }
+  .timeline::before { content: ""; position: absolute; left: 9px; top: 6px; bottom: 6px; width: 3px; border-radius: 3px; background: linear-gradient(var(--pink), var(--yellow), var(--green), var(--cyan), var(--purple)); }
+  .t-item { position: relative; margin-bottom: 26px; }
+  .t-item::before { content: ""; position: absolute; left: -33px; top: 6px; width: 15px; height: 15px; border-radius: 50%; background: var(--bg); border: 3px solid var(--c); }
+  .t-item h3 { font-size: 1.15rem; }
+  .t-item small { color: var(--c); font-weight: 700; }
+  .t-item p { color: var(--muted); }
+
+  /* Contact */
+  .contact { text-align: center; }
+  .contact .glass { padding: 48px 28px; background: linear-gradient(135deg, rgba(255,77,141,.15), rgba(40,215,255,.12), rgba(169,107,255,.15)); }
+  .contact p { color: var(--muted); max-width: 520px; margin: 0 auto 26px; }
+
+  footer { text-align: center; padding: 34px 0 44px; color: var(--muted); font-size: .88rem; border-top: 1px solid var(--border); }
+
+  /* Reveal animation */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.show { opacity: 1; transform: none; }
+
+  @media (max-width: 760px) {
+    .about-grid { grid-template-columns: 1fr; }
+    nav ul { gap: 14px; }
+    nav a { font-size: .85rem; }
+    .logo { display: none; }
+    nav .wrap { justify-content: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
 </head>
-
 <body>
+<div class="blob b1"></div>
+<div class="blob b2"></div>
+<div class="blob b3"></div>
 
-    <!-- CI/CD pipeline test -->
+<nav>
+  <div class="wrap">
+    <div class="logo">&lt;<span>Babaseyi</span>/&gt;</div>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#journey">Journey</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
 
-    <!-- Header -->
-    <header>
-        <h1>Babaseyi Abraham</h1>
-        <p>Junior Cloud Engineer | Cloud & DevOps Enthusiast</p>
-        <a href="#contact" class="btn">Get In Touch</a>
-    </header>
+<header class="hero">
+  <div class="wrap">
+    <div class="badge"><span class="dot"></span> Open to cloud &amp; DevOps opportunities</div>
+    <h1>Hi, I'm <span class="grad-text">Babaseyi Abraham</span></h1>
+    <div class="typing" id="typing"></div>
+    <p class="lead">A Junior Cloud Engineer who loves building, automating and shipping infrastructure on AWS. Always learning, always deploying.</p>
+    <div class="btns">
+      <a class="btn primary" href="#projects">View My Projects</a>
+      <a class="btn ghost" href="https://github.com/Abrahamgeorge-dev" target="_blank" rel="noopener">GitHub Profile</a>
+    </div>
+  </div>
+</header>
 
-    <!-- Navigation -->
-    <nav>
-        <a href="#about">About</a>
-        <a href="#skills">Skills</a>
-        <a href="#projects">Projects</a>
-        <a href="#interests">Interests</a>
-        <a href="#contact">Contact</a>
-    </nav>
-
-    <!-- About -->
-    <section id="about">
-        <h2>About Me</h2>
-
-        <div class="about">
-            <p>
-                Hello! I'm Babaseyi Abraham, a Junior Cloud Engineer
-                passionate about cloud computing, automation, and
-                modern technology.
-            </p>
-
-            <p>
-                I enjoy learning how cloud infrastructure works and
-                building practical solutions using AWS, Linux,
-                DevOps tools, and Infrastructure as Code.
-            </p>
-
-            <p>
-                My goal is to continue developing my technical skills
-                and become a highly skilled Cloud and DevOps Engineer.
-            </p>
+<main>
+  <section id="about">
+    <div class="wrap">
+      <div class="eyebrow">About me</div>
+      <h2>Turning <span class="grad-text2">ideas into infrastructure</span></h2>
+      <div class="about-grid reveal">
+        <div class="glass">
+          <p>I'm a cloud and DevOps enthusiast with hands-on experience across AWS, Linux, Terraform, Ansible, Jenkins and Docker. I enjoy automating the boring parts so teams can ship faster and sleep better.</p>
+          <p>I hold a Bachelor's degree from Tai Solarin University of Education and completed the Linux, DevOps and Cloud Training Program at Bloomy Technologies. Now I'm turning that training into real, deployed projects.</p>
         </div>
-    </section>
-
-    <!-- Skills -->
-    <section id="skills">
-        <h2>My Skills</h2>
-
-        <div class="skills">
-
-            <div class="skill">
-                ☁️
-                <h3>AWS</h3>
-                <p>Cloud Infrastructure & Services</p>
-            </div>
-
-            <div class="skill">
-                🐧
-                <h3>Linux</h3>
-                <p>Server Administration & Shell Commands</p>
-            </div>
-
-            <div class="skill">
-                🏗️
-                <h3>Terraform</h3>
-                <p>Infrastructure as Code</p>
-            </div>
-
-            <div class="skill">
-                ⚙️
-                <h3>Ansible</h3>
-                <p>Configuration Management</p>
-            </div>
-
-            <div class="skill">
-                🔄
-                <h3>Jenkins</h3>
-                <p>CI/CD Automation</p>
-            </div>
-
-            <div class="skill">
-                🐳
-                <h3>Docker</h3>
-                <p>Containerization</p>
-            </div>
-
-            <div class="skill">
-                🌐
-                <h3>Networking</h3>
-                <p>VPC, Subnets, Security Groups & DNS</p>
-            </div>
-
-            <div class="skill">
-                💻
-                <h3>Git & GitHub</h3>
-                <p>Version Control</p>
-            </div>
-
+        <div class="stats">
+          <div class="stat"><b>AWS</b><span>Cloud platform</span></div>
+          <div class="stat"><b>CI/CD</b><span>Automation</span></div>
+          <div class="stat"><b>IaC</b><span>Terraform</span></div>
+          <div class="stat"><b>3+</b><span>Projects built</span></div>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <!-- Projects -->
-    <section id="projects">
-        <h2>My Projects</h2>
+  <section id="skills">
+    <div class="wrap">
+      <div class="eyebrow">Toolbox</div>
+      <h2>Skills &amp; <span class="grad-text">Technologies</span></h2>
+      <div class="skills reveal">
+        <div class="skill" style="--c:#ff9f45"><div class="ico">☁️</div><h3>AWS</h3><p>EC2, S3, IAM, VPC</p></div>
+        <div class="skill" style="--c:#ffd93d"><div class="ico">🐧</div><h3>Linux</h3><p>Admin &amp; shell</p></div>
+        <div class="skill" style="--c:#a96bff"><div class="ico">🏗️</div><h3>Terraform</h3><p>Infrastructure as Code</p></div>
+        <div class="skill" style="--c:#ff4d8d"><div class="ico">⚙️</div><h3>Ansible</h3><p>Config management</p></div>
+        <div class="skill" style="--c:#2ee6a6"><div class="ico">🔄</div><h3>Jenkins</h3><p>CI/CD pipelines</p></div>
+        <div class="skill" style="--c:#28d7ff"><div class="ico">🐳</div><h3>Docker</h3><p>Containers</p></div>
+        <div class="skill" style="--c:#5b8cff"><div class="ico">🌐</div><h3>Networking</h3><p>Fundamentals</p></div>
+        <div class="skill" style="--c:#eef2ff"><div class="ico">🔀</div><h3>Git &amp; GitHub</h3><p>Version control</p></div>
+      </div>
+    </div>
+  </section>
 
-        <div class="projects">
+  <section id="projects">
+    <div class="wrap">
+      <div class="eyebrow">Portfolio</div>
+      <h2>Featured <span class="grad-text2">Projects</span></h2>
+      <div class="projects reveal">
+        <article class="project" style="--g:linear-gradient(135deg,#ff4d8d,#ff9f45)">
+          <div class="inner">
+            <span class="tag">DevOps</span>
+            <h3>End-to-End DevOps Pipeline</h3>
+            <p>An automated workflow that takes code from commit to deployment, combining CI/CD, containers and infrastructure automation.</p>
+            <div class="chips"><span class="chip">Jenkins</span><span class="chip">Docker</span><span class="chip">Terraform</span><span class="chip">Ansible</span></div>
+          </div>
+        </article>
+        <article class="project" style="--g:linear-gradient(135deg,#28d7ff,#5b8cff)">
+          <div class="inner">
+            <span class="tag">Cloud</span>
+            <h3>Personal Cloud Portfolio</h3>
+            <p>A portfolio hosted in the cloud to showcase my work and demonstrate real-world cloud deployment skills.</p>
+            <div class="chips"><span class="chip">AWS</span><span class="chip">Linux</span><span class="chip">Networking</span></div>
+          </div>
+        </article>
+        <article class="project" style="--g:linear-gradient(135deg,#2ee6a6,#ffd93d)">
+          <div class="inner">
+            <span class="tag">Application</span>
+            <h3>Java Yearbook App</h3>
+            <p>A Java application built and deployed as part of my hands-on training, practicing the full build-and-release cycle.</p>
+            <div class="chips"><span class="chip">Java</span><span class="chip">Git</span><span class="chip">CI/CD</span></div>
+          </div>
+        </article>
+      </div>
 
-            <div class="project">
-                <h3>AWS Cloud Infrastructure</h3>
-                <p>
-                    Created and managed AWS infrastructure using
-                    Infrastructure as Code and cloud services.
-                </p>
-            </div>
-
-            <div class="project">
-                <h3>DevOps CI/CD Pipeline</h3>
-                <p>
-                    Built a CI/CD workflow using GitHub and Jenkins
-                    to automate application deployment.
-                </p>
-            </div>
-
-            <div class="project">
-                <h3>Terraform Infrastructure</h3>
-                <p>
-                    Practiced provisioning AWS resources such as
-                    EC2, S3, networking and other cloud services
-                    using Terraform.
-                </p>
-            </div>
-
-            <div class="project">
-                <h3>Linux Server Administration</h3>
-                <p>
-                    Practiced Linux server management, shell
-                    scripting, users, permissions, services and
-                    system monitoring.
-                </p>
-            </div>
-
+      <div class="glass reveal" style="margin-top:34px; text-align:center;">
+        <div class="eyebrow" style="margin-bottom:14px;">How I ship</div>
+        <div class="pipeline">
+          <div class="step" style="background:#ff9f45">Git Push</div><span class="arrow">➜</span>
+          <div class="step" style="background:#ffd93d">Jenkins Build</div><span class="arrow">➜</span>
+          <div class="step" style="background:#2ee6a6">Docker Image</div><span class="arrow">➜</span>
+          <div class="step" style="background:#28d7ff">Terraform Infra</div><span class="arrow">➜</span>
+          <div class="step" style="background:#a96bff">Ansible Deploy</div>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <!-- Interests -->
-    <section id="interests">
-        <h2>More About Me</h2>
-
-        <div class="interests">
-            <p>
-                Outside technology, I am involved in online business
-                and provision retail.
-            </p>
-
-            <p>
-                I enjoy learning new skills, working on practical
-                projects, and exploring ways technology can solve
-                real-world problems.
-            </p>
+  <section id="journey">
+    <div class="wrap">
+      <div class="eyebrow">Journey</div>
+      <h2>Education &amp; <span class="grad-text">Training</span></h2>
+      <div class="timeline reveal">
+        <div class="t-item" style="--c:#ff4d8d">
+          <small>Oct 2026</small>
+          <h3>Linux, DevOps and Cloud Training Program</h3>
+          <p>Certificate of completion from Bloomy Technologies.</p>
         </div>
-    </section>
-
-    <!-- Contact -->
-    <section id="contact">
-        <h2>Contact Me</h2>
-
-        <div class="contact">
-            <p>📧 Email: abrahamsonolageorge@gmail.com</p>
-            <p>💼 LinkedIn: Babaseyi Abrahamgeorge</p>
-            <p>🐙 GitHub: Abrahamgeorge-dev</p>
-
-            <a href="#" class="btn">Let's Connect</a>
+        <div class="t-item" style="--c:#2ee6a6">
+          <small>University</small>
+          <h3>Bachelor's Degree</h3>
+          <p>Tai Solarin University of Education.</p>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <!-- Footer -->
-    <footer>
-        <p>
-            © 2026 Babaseyi Abraham | Junior Cloud Engineer
-        </p>
+  <section id="contact" class="contact">
+    <div class="wrap">
+      <div class="glass reveal">
+        <div class="eyebrow">Let's connect</div>
+        <h2>Ready to build something <span class="grad-text">great</span>?</h2>
+        <p>I'm looking for opportunities to grow as a cloud engineer. Check out my code and let's talk.</p>
+        <a class="btn primary" href="https://github.com/Abrahamgeorge-dev" target="_blank" rel="noopener">github.com/Abrahamgeorge-dev</a>
+      </div>
+    </div>
+  </section>
+</main>
 
-        <p>
-            Built by ME
-        </p>
-    </footer>
+<footer>
+  <div class="wrap">© <span id="year"></span> Babaseyi Abraham · Built with ☁️ and a lot of coffee</div>
+</footer>
 
+<script>
+  // Typing effect
+  const phrases = [
+    "Junior Cloud Engineer",
+    "AWS · Linux · Terraform",
+    "CI/CD with Jenkins & Docker",
+    "Automating with Ansible"
+  ];
+  const el = document.getElementById("typing");
+  let p = 0, c = 0, deleting = false;
+  function type() {
+    const word = phrases[p];
+    el.textContent = word.slice(0, c);
+    if (!deleting && c < word.length) { c++; setTimeout(type, 70); }
+    else if (!deleting) { deleting = true; setTimeout(type, 1400); }
+    else if (c > 0) { c--; setTimeout(type, 35); }
+    else { deleting = false; p = (p + 1) % phrases.length; setTimeout(type, 300); }
+  }
+  type();
+
+  // Scroll reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("show"); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll(".reveal").forEach(n => io.observe(n));
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
 </body>
 </html>
